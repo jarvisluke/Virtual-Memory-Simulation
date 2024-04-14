@@ -60,9 +60,6 @@ int sim_second_chance(int mem_size, int data[], int data_size)
             }
             queue_push(q, data[i]);
         }
-        printf("Data: %d   ", data[i]);
-        print_queue(q);
-        
     }
 
     return page_faults;
@@ -70,7 +67,6 @@ int sim_second_chance(int mem_size, int data[], int data_size)
 
 int main() {
     int arr[] = {1, 1, 3, 4, 1, 2, 5, 1};
-
     int arr_size = sizeof(arr)/sizeof(arr[0]);
 
     int fifo_results = sim_fifo(3, arr, arr_size);
