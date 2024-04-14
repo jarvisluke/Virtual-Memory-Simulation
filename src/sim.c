@@ -78,7 +78,6 @@ int sim_clock(int mem_size, int pages[], int pages_size)
     c->arr = arr;
     c->arr_size = mem_size;
     c->i = 0;
-    circ_print(c);
 
     for (int i = 0; i < pages_size; i++)
     {
@@ -92,8 +91,6 @@ int sim_clock(int mem_size, int pages[], int pages_size)
             circ_second_chance(c, pages[i]);
             c->i = (c->i + 1) % c->arr_size;
         }
-        printf("Page: %d\t", pages[i]);
-        circ_print(c);
     }
     return page_faults;
 }
