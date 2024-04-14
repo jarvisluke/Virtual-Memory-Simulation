@@ -2,29 +2,28 @@
 #include "queue.h"
 
 // Simulates first in, first out algorithm
-int sim_fifo(int mem_size, int data[], int data_size)
+int sim_fifo(int mem_size, int pages[], int pages_size)
 {
     int page_faults = 0;
     Queue* q = malloc(sizeof(Queue));
     q->head = NULL;
     q->tail = NULL;
-    queue_clear_all_marks(q);
     int queue_size = 0;
 
-    for (int i = 0; i < data_size; i ++)
+    for (int i = 0; i < pages_size; i ++)
     {   
-        if (!queue_check(q, data[i]))
+        if (!queue_contains(q, pages[i]))
         {
             page_faults ++;
             if (queue_size == mem_size)
             {
-                queue_pop(q);
+                queue_remove(q);
             }
             else
             {
                 queue_size ++;
             }
-            queue_push(q, data[i]);
+            queue_add(q, pages[i]);
         }
     }
 
@@ -32,20 +31,19 @@ int sim_fifo(int mem_size, int data[], int data_size)
 }
 
 // Simulates second chance algorithm
-int sim_second_chance(int mem_size, int data[], int data_size)
+int sim_second_chance(int mem_size, int pages[], int pages_size)
 {
     int page_faults = 0;
     Queue* q = malloc(sizeof(Queue));
     q->head = NULL;
     q->tail = NULL;
-    queue_clear_all_marks(q);
     int queue_size = 0;
 
-    for (int i = 0; i < data_size; i ++)
+    for (int i = 0; i < pages_size; i ++)
     {
-        if (queue_check(q, data[i]))
+        if (queue_contains(q, pages[i]))
         {
-            queue_mark(q, data[i]);
+            queue_mark(q, pages[i]);
         }
         else
         {
@@ -58,10 +56,35 @@ int sim_second_chance(int mem_size, int data[], int data_size)
             {
                 queue_size ++;
             }
-            queue_push(q, data[i]);
+            queue_add(q, pages[i]);
         }
     }
 
+    return page_faults;
+}
+
+// Simulates clock algorithm
+int sim_clock(int mem_size, int pages[], int pages_size)
+{
+    int page_faults = 0;
+    CircularArray* c = malloc(sizeof(CircularArray));
+    CircularArrayEle arr[mem_size];
+    c->arr = arr;
+    c->arr_size = mem_size;
+    c->i = 0;
+
+    for (int i = 0; i < pages_size; i++)
+    {
+        if (circ_contains(c, pages[i]))
+        {
+            circ_mark(c, pages[i]);
+        }
+        else
+        {
+            page_faults ++;
+            circ_second_chance(c, pages[i]);
+        }
+    }
     return page_faults;
 }
 
@@ -71,10 +94,11 @@ int main() {
 
     int fifo_results = sim_fifo(3, arr, arr_size);
     int second_chance_results = sim_second_chance(3, arr, arr_size);
-
+    int clock_results = sim_clock(3, arr, arr_size);
 
     printf("FIFO produced %d page faults\n", fifo_results);
     printf("Second chance produced %d page faults\n", second_chance_results);
+    printf("Clock produced %d page faults\n", clock_results);
 
     return 0;
 }
