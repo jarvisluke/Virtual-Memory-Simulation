@@ -38,8 +38,6 @@ void queue_mark(Queue* q, int page);
 void queue_second_chance(Queue* q);
 void queue_print(Queue* q);
 
-void circ_add(CircularArray* c, int page);
-void circ_remove(CircularArray* c);
 int circ_contains(CircularArray* c, int page);
 void circ_mark(CircularArray* c, int page);
 void circ_second_chance(CircularArray* c, int page);

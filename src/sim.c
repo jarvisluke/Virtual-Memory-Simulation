@@ -67,11 +67,18 @@ int sim_second_chance(int mem_size, int pages[], int pages_size)
 int sim_clock(int mem_size, int pages[], int pages_size)
 {
     int page_faults = 0;
-    CircularArray* c = malloc(sizeof(CircularArray));
     CircularArrayEle arr[mem_size];
+    for (int i = 0; i < mem_size; i ++)
+    {
+        arr[i].page = 0;
+        arr[i].mark = 0;
+    }
+
+    CircularArray* c = malloc(sizeof(CircularArray));
     c->arr = arr;
     c->arr_size = mem_size;
     c->i = 0;
+    circ_print(c);
 
     for (int i = 0; i < pages_size; i++)
     {
@@ -83,7 +90,10 @@ int sim_clock(int mem_size, int pages[], int pages_size)
         {
             page_faults ++;
             circ_second_chance(c, pages[i]);
+            c->i = (c->i + 1) % c->arr_size;
         }
+        printf("Page: %d\t", pages[i]);
+        circ_print(c);
     }
     return page_faults;
 }
