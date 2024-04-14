@@ -90,7 +90,7 @@ void queue_clear_all_marks(Queue* q)
     }
 }
 
-void print_queue(Queue* q)
+void queue_print(Queue* q)
 {
     Node* i = q->head;
     printf("Queue: ");

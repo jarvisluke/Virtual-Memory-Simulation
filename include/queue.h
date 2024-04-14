@@ -24,6 +24,6 @@ int queue_check(Queue* q, int data);
 void queue_mark(Queue* q, int data);
 void queue_second_chance(Queue* q);
 void queue_clear_all_marks(Queue* q);
-void print_queue(Queue* q);
+void queue_print(Queue* q);
 
 #endif // QUEUE_H
