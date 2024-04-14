@@ -1,27 +1,32 @@
+# Compiler
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
 
-SRCDIR = src
-OBJDIR = obj
-BINDIR = bin
+# Directories
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+INC_DIR = include
 
-SRCS = $(wildcard $(SRCDIR)/*.c)
-OBJS = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
-EXEC = $(BINDIR)/program
+# Files
+SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 
-all: $(EXEC)
+# Flags
+CFLAGS = -Wall -Wextra -I$(INC_DIR)
 
-$(EXEC): $(OBJS) | $(BINDIR)
-    $(CC) $(CFLAGS) $^ -o $@
+# Executable
+EXECUTABLE = $(BIN_DIR)/program.exe
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
-    $(CC) $(CFLAGS) -c $< -o $@
+# Targets
+all: $(EXECUTABLE)
 
-$(OBJDIR):
-    mkdir -p $(OBJDIR)
+$(EXECUTABLE): $(OBJ_FILES)
+	$(CC) $(CFLAGS) $^ -o $@
 
-$(BINDIR):
-    mkdir -p $(BINDIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-    rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(OBJ_DIR)/*.o $(EXECUTABLE)
+
+.PHONY: all clean

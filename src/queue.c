@@ -1,6 +1,5 @@
-#include "queue.h"
-
 #include <stdio.h>
+#include "queue.h"
 
 void push(Queue* q, int data)
 {
