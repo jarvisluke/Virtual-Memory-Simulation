@@ -176,7 +176,8 @@ int sim_nfu(int mem_size, int pages[], int pages_size, int clock)
     return page_faults;
 }
 
-int sim_age(int mem_size, int pages[], int pages_size, int clock)
+// Simulates NFU algorithm with aging
+int sim_aging(int mem_size, int pages[], int pages_size, int clock)
 {
     int page_faults = 0;
     int timer = 0;
@@ -243,7 +244,7 @@ int main() {
     int nfu_results = sim_nfu(mem_size, arr, arr_size, clock);
     printf("NFU produced %d page faults\n", nfu_results);
 
-    int age_results = sim_age(mem_size, arr, arr_size, clock);
+    int age_results = sim_aging(mem_size, arr, arr_size, clock);
     printf("AGE produced %d page faults\n", age_results);
 
     return 0;
