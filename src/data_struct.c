@@ -166,6 +166,42 @@ void arr_replace_lowest(ArrayNode* arr, int arr_size, int page)
     arr[index].counter = 0;
 }
 
+// Replaces page with furthest next reference in page sequence
+void arr_replace_furthest(int[] arr, int arr_size, int[] pages, int index)
+{
+    int furthest_index = index + 1;
+
+    // Finds candidate for replacement
+    for (int i = 0; i < arr_size; i ++)
+    {
+        int first_index = -1;
+        for (int j = furthest_index; j < arr_size; j ++)
+        {
+            if arr[i] == pages[j]
+            {
+                first_index = j;
+            }
+        }
+
+        // If arr[i] no longer occurs in pages, it is the ideal candidate
+        if (first_index == -1)
+        {
+            arr[first_index] = pages[index];
+            return;
+        }
+        // Set furthest_index to first index of arr[i] if it is the furthest from index
+        else
+        {
+            if (first_index > furthest_index)
+            {
+                furthest_index = first_index;
+            }
+        }
+    }
+
+    arr[furthest_index] = pages[index];
+}
+
 // Increment the counter of all ArrayNodes with mark
 void arr_increment_marked(ArrayNode* arr, int arr_size)
 {

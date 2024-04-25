@@ -222,6 +222,32 @@ int sim_age(int mem_size, int pages[], int pages_size, int clock)
     return page_faults;
 }
 
+// Simulates optimal page replacement
+int sim_opr(int mem_size, int[] pages, int pages_size)
+{
+    int page_faults = 0;
+    int[mem_size] arr;
+    int arr_size = 0;
+    int index;
+
+    for (int i = 0; i < mem_size; i ++)
+    {
+        index = arr_contains(arr, pages[i]);
+        if (index == -1)
+        {
+            page_faults ++;
+            if (arr_size == mem_size)
+            {
+                arr_replace_furthest(arr, arr_size, pages[i], pages);
+            }
+            else
+            {
+                arr[arr_size++] = pages[i];
+            }
+        } 
+    }
+}
+
 int main() {
     int arr[] = {1, 1, 1, 1, 1, 1, 1, 1, 3, 5, 4, 2, 3, 13, 14, 2, 2, 3, 4, 5, 6, 7, 2, 9, 10, 11, 3, 3, 3};
     int arr_size = sizeof(arr)/sizeof(arr[0]);
@@ -245,6 +271,9 @@ int main() {
 
     int age_results = sim_age(mem_size, arr, arr_size, clock);
     printf("AGE produced %d page faults\n", age_results);
+
+    int opr_results = sim_opr(mem_size, arr, arr_size):
+    printf("Optimal page replacement produced %d page faults\n", opr_results);
 
     return 0;
 }
