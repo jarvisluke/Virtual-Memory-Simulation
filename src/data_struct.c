@@ -167,7 +167,7 @@ void arr_replace_lowest(ArrayNode* arr, int arr_size, int page)
 }
 
 // Replaces page with furthest next reference in page sequence
-void arr_replace_furthest(int[] arr, int arr_size, int[] pages, int index)
+void arr_replace_furthest(int[] arr, int arr_size, int[] pages, int pages_size, int index)
 {
     int furthest_index = index + 1;
 
@@ -175,7 +175,7 @@ void arr_replace_furthest(int[] arr, int arr_size, int[] pages, int index)
     for (int i = 0; i < arr_size; i ++)
     {
         int first_index = -1;
-        for (int j = furthest_index; j < arr_size; j ++)
+        for (int j = furthest_index; j < pages_size; j ++)
         {
             if arr[i] == pages[j]
             {

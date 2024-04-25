@@ -176,8 +176,13 @@ int sim_nfu(int mem_size, int pages[], int pages_size, int clock)
     return page_faults;
 }
 
-int sim_age(int mem_size, int pages[], int pages_size, int clock)
+int sim_aging(int mem_size, int pages[], int pages_size, int clock)
 {
+    if (clock > 32)
+    {
+        printf("Clock: {%d} must be lower than 32");
+        return;
+    }
     int page_faults = 0;
     int timer = 0;
     ArrayNode arr[mem_size];    
@@ -223,7 +228,7 @@ int sim_age(int mem_size, int pages[], int pages_size, int clock)
 }
 
 // Simulates optimal page replacement
-int sim_opr(int mem_size, int[] pages, int pages_size)
+int sim_optimal(int mem_size, int[] pages, int pages_size)
 {
     int page_faults = 0;
     int[mem_size] arr;
@@ -238,7 +243,7 @@ int sim_opr(int mem_size, int[] pages, int pages_size)
             page_faults ++;
             if (arr_size == mem_size)
             {
-                arr_replace_furthest(arr, arr_size, pages[i], pages);
+                arr_replace_furthest(arr, arr_size, pages, pages_size, i);
             }
             else
             {
@@ -269,10 +274,10 @@ int main() {
     int nfu_results = sim_nfu(mem_size, arr, arr_size, clock);
     printf("NFU produced %d page faults\n", nfu_results);
 
-    int age_results = sim_age(mem_size, arr, arr_size, clock);
-    printf("AGE produced %d page faults\n", age_results);
+    int age_results = sim_aging(mem_size, arr, arr_size, clock);
+    printf("Aging produced %d page faults\n", age_results);
 
-    int opr_results = sim_opr(mem_size, arr, arr_size):
+    int opr_results = sim_optimal(mem_size, arr, arr_size):
     printf("Optimal page replacement produced %d page faults\n", opr_results);
 
     return 0;
