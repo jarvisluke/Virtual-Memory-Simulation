@@ -132,8 +132,21 @@ void queue_move_to_tail(List *q, int page)
 
 /* Array functions */
 
+// Returns index of page, or -1 if the array does not contain it
+int arr_contains(int arr[], int arr_size, int page)
+{
+    for (int i = 0; i < arr_size; i ++)
+    {
+        if (arr[i] == page)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
 // Returns index of ArrayNode with page, or -1 if the array does not contain it
-int arr_contains(ArrayNode* arr, int arr_size, int page)
+int arr_contains_node(ArrayNode* arr, int arr_size, int page)
 {
     for (int i = 0; i < arr_size; i ++)
     {
@@ -167,7 +180,7 @@ void arr_replace_lowest(ArrayNode* arr, int arr_size, int page)
 }
 
 // Replaces page with furthest next reference in page sequence
-void arr_replace_furthest(int[] arr, int arr_size, int[] pages, int pages_size, int index)
+void arr_replace_furthest(int arr[], int arr_size, int pages[], int pages_size, int index)
 {
     int furthest_index = index + 1;
 
@@ -177,7 +190,7 @@ void arr_replace_furthest(int[] arr, int arr_size, int[] pages, int pages_size, 
         int first_index = -1;
         for (int j = furthest_index; j < pages_size; j ++)
         {
-            if arr[i] == pages[j]
+            if (arr[i] == pages[j])
             {
                 first_index = j;
             }

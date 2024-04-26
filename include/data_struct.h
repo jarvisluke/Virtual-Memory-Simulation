@@ -4,10 +4,10 @@
 #include <stdlib.h>
 
 // Define structures
-typedef struct 
+typedef struct node
 {
     int page;
-    Node* next;
+    struct node* next;
     int mark;
 } Node;
 
@@ -40,9 +40,10 @@ void queue_second_chance(List* q);
 void queue_move_to_tail(List* q, int page);
 void queue_print(List* q);
 
-int arr_contains(ArrayNode* arr, int arr_size, int page);
+int arr_contains(int arr[], int arr_size, int page);
+int arr_contains_node(ArrayNode* arr, int arr_size, int page);
 void arr_replace_lowest(ArrayNode* arr, int arr_size, int page);
-void arr_replace_furthest(int[] arr, int arr_size, int[] pages, , int pages_size, int index);
+void arr_replace_furthest(int arr[], int arr_size, int pages[], int pages_size, int index);
 void arr_increment_marked(ArrayNode* arr, int arr_size);
 void arr_age_marked(ArrayNode* arr, int arr_size, int clock);
 

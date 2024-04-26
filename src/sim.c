@@ -144,7 +144,7 @@ int sim_nfu(int mem_size, int pages[], int pages_size, int clock)
 
     for (int i = 0; i < pages_size; i ++)
     {   
-        int index = arr_contains(arr, mem_size, pages[i]);
+        int index = arr_contains_node(arr, mem_size, pages[i]);
         if (index != -1)
         {
             arr[index].mark = 1;
@@ -176,12 +176,13 @@ int sim_nfu(int mem_size, int pages[], int pages_size, int clock)
     return page_faults;
 }
 
+// Simulates NFU algorithm with aging
 int sim_aging(int mem_size, int pages[], int pages_size, int clock)
 {
     if (clock > 32)
     {
-        printf("Clock: {%d} must be lower than 32");
-        return;
+        printf("Clock: {%d} must be lower than 32", clock);
+        return -1;
     }
     int page_faults = 0;
     int timer = 0;
@@ -195,7 +196,7 @@ int sim_aging(int mem_size, int pages[], int pages_size, int clock)
 
     for (int i = 0; i < pages_size; i ++)
     {   
-        int index = arr_contains(arr, mem_size, pages[i]);
+        int index = arr_contains_node(arr, mem_size, pages[i]);
         if (index != -1)
         {
             arr[index].mark = 1;
@@ -228,16 +229,16 @@ int sim_aging(int mem_size, int pages[], int pages_size, int clock)
 }
 
 // Simulates optimal page replacement
-int sim_optimal(int mem_size, int[] pages, int pages_size)
+int sim_optimal(int mem_size, int pages[], int pages_size)
 {
     int page_faults = 0;
-    int[mem_size] arr;
+    int arr[mem_size];
     int arr_size = 0;
     int index;
 
     for (int i = 0; i < mem_size; i ++)
     {
-        index = arr_contains(arr, pages[i]);
+        index = arr_contains(arr, pages[i], pages_size);
         if (index == -1)
         {
             page_faults ++;
@@ -251,6 +252,8 @@ int sim_optimal(int mem_size, int[] pages, int pages_size)
             }
         } 
     }
+
+    return page_faults;
 }
 
 int main() {
@@ -274,8 +277,11 @@ int main() {
     int nfu_results = sim_nfu(mem_size, arr, arr_size, clock);
     printf("NFU produced %d page faults\n", nfu_results);
 
-    int age_results = sim_age(mem_size, arr, arr_size, clock);
-    printf("AGE produced %d page faults\n", age_results);
+    int age_results = sim_aging(mem_size, arr, arr_size, clock);
+    printf("Aging produced %d page faults\n", age_results);
+
+    int optimal_results = sim_optimal(mem_size, arr, arr_size);
+    printf("Optimal produced %d page faults\n", optimal_results);
 
     return 0;
 }
