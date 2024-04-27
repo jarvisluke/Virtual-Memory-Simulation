@@ -329,11 +329,11 @@ void run_simulations(int mem_size, int pages_size, int page_max)
 int main() {
     printf("\n\nPage frame size 8\n");
     run_simulations(8, 1000, 20);
-    printf("Page frame size 10\n");
+    printf("\n\nPage frame size 10\n");
     run_simulations(10, 1000, 20);
-    printf("Page frame size 12\n");
+    printf("\n\nPage frame size 12\n");
     run_simulations(12, 1000, 20);
-    printf("Page frame size 15\n");
+    printf("\n\nPage frame size 15\n");
     run_simulations(15, 1000, 20);
 
     return 0;
