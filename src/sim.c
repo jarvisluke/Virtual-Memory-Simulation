@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include "data_struct.h"
+#include "patterns.h"
 
 // Simulates first in, first out algorithm
 int sim_fifo(int mem_size, int pages[], int pages_size)
 {
     int page_faults = 0;
-    List* q = malloc(sizeof(List));
+    Queue* q = malloc(sizeof(Queue));
     q->head = NULL;
     q->tail = NULL;
     int q_size = 0;
@@ -34,7 +35,7 @@ int sim_fifo(int mem_size, int pages[], int pages_size)
 int sim_second_chance(int mem_size, int pages[], int pages_size)
 {
     int page_faults = 0;
-    List* q = malloc(sizeof(List));
+    Queue* q = malloc(sizeof(Queue));
     q->head = NULL;
     q->tail = NULL;
     int q_size = 0;
@@ -100,7 +101,7 @@ int sim_clock(int mem_size, int pages[], int pages_size)
 int sim_lru(int mem_size, int pages[], int pages_size)
 {
     int page_faults = 0;
-    List* q = malloc(sizeof(List));
+    Queue* q = malloc(sizeof(Queue));
     q->head = NULL;
     q->tail = NULL;
     int q_size = 0;
@@ -236,15 +237,15 @@ int sim_optimal(int mem_size, int pages[], int pages_size)
     int arr_size = 0;
     int index;
 
-    for (int i = 0; i < mem_size; i ++)
+    for (int i = 0; i < pages_size; i ++)
     {
-        index = arr_contains(arr, pages[i], pages_size);
+        index = arr_contains(arr, mem_size, pages[i]);
         if (index == -1)
         {
             page_faults ++;
             if (arr_size == mem_size)
             {
-                arr_replace_furthest(arr, arr_size, pages, pages_size, i);
+                arr_replace_furthest(arr, mem_size, pages, pages_size, i);
             }
             else
             {
@@ -256,32 +257,77 @@ int sim_optimal(int mem_size, int pages[], int pages_size)
     return page_faults;
 }
 
-int main() {
-    int arr[] = {1, 1, 1, 1, 1, 1, 1, 1, 3, 5, 4, 2, 3, 13, 14, 2, 2, 3, 4, 5, 6, 7, 2, 9, 10, 11, 3, 3, 3};
-    int arr_size = sizeof(arr)/sizeof(arr[0]);
-    int mem_size = 5;
+int sim_random(int mem_size, int pages[], int pages_size)
+{
+    int page_faults = 0;
+    int arr[mem_size];
+    int arr_size = 0;
+
+    int index;
+    for (int i = 0; i < pages_size; i ++)
+    {
+        index = arr_contains(arr, mem_size, pages[i]);
+        if (index == -1)
+        {
+            if (arr_size == mem_size)
+            {       
+                page_faults ++;
+                arr[rand() % arr_size] = pages[i];
+            }
+            else
+            {
+                arr[arr_size++] = pages[i];
+            }
+        }
+    }
+    return page_faults;
+}
+
+
+void run_simulations(int mem_size, int pages_size, int page_max)
+{
+    int pages[5][pages_size];
+    fill_looping_pattern(pages[0], pages_size, page_max);
+    fill_stack_access_pattern(pages[1], pages_size, page_max);
+    fill_temporal_locality_pattern(pages[2], pages_size, page_max, 72);
+    fill_random_pattern(pages[3], pages_size, page_max);
+    fill_front_heavy_access_pattern(pages[4], pages_size, page_max);
+
     int clock = 5;
 
-    int fifo_results = sim_fifo(3, arr, arr_size);
-    printf("FIFO produced %d page faults\n", fifo_results);
+    for (int i = 0; i < 5; i ++)
+    {
+        printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        //arr_print(pages[i], pages_size);
 
-    int second_chance_results = sim_second_chance(mem_size, arr, arr_size);
-    printf("Second chance produced %d page faults\n", second_chance_results);
+        int fifo_results = sim_fifo(mem_size, pages[i], pages_size);
+        printf("FFO produced %d page faults\n", fifo_results);
 
-    int clock_results = sim_clock(mem_size, arr, arr_size);
-    printf("Clock produced %d page faults\n", clock_results);
+        int random_results = sim_random(mem_size, pages[i], pages_size);
+        printf("Random produced %d page faults\n", random_results);
 
-    int lru_results = sim_lru(mem_size, arr, arr_size);
-    printf("LRU produced %d page faults\n", lru_results);
+        // int second_chance_results = sim_second_chance(mem_size, pages[i], pages_size);
+        // printf("Second chance produced %d page faults\n", second_chance_results);
 
-    int nfu_results = sim_nfu(mem_size, arr, arr_size, clock);
-    printf("NFU produced %d page faults\n", nfu_results);
+        int clock_results = sim_clock(mem_size, pages[i], pages_size);
+        printf("Clock produced %d page faults\n", clock_results);
 
-    int age_results = sim_aging(mem_size, arr, arr_size, clock);
-    printf("Aging produced %d page faults\n", age_results);
+        int lru_results = sim_lru(mem_size, pages[i], pages_size);
+        printf("LRU produced %d page faults\n", lru_results);
 
-    int optimal_results = sim_optimal(mem_size, arr, arr_size);
-    printf("Optimal produced %d page faults\n", optimal_results);
+        int nfu_results = sim_nfu(mem_size, pages[i], pages_size, clock);
+        printf("NFU produced %d page faults\n", nfu_results);
+
+        int age_results = sim_aging(mem_size, pages[i], pages_size, clock);
+        printf("Aging produced %d page faults\n", age_results);
+
+        int optimal_results = sim_optimal(mem_size, pages[i], pages_size);
+        printf("Optimal produced %d page faults\n", optimal_results);
+    }
+}
+
+int main() {
+    run_simulations(15, 1000, 20);
 
     return 0;
 }

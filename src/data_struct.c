@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include "data_struct.h"
 
-/* List functions */
+/* Queue functions */
 
 // Adds node to tail
-void queue_push(List *q, int page)
+void queue_push(Queue *q, int page)
 {
     // Creates new Node
     Node *new_node = malloc(sizeof(Node));
@@ -25,7 +25,7 @@ void queue_push(List *q, int page)
 }
 
 // Removes node at head
-void queue_pop(List *q)
+void queue_pop(Queue *q)
 {
     if (q->head == NULL)
     {
@@ -37,7 +37,7 @@ void queue_pop(List *q)
 }
 
 // Checks if queue contains page
-int queue_contains(List *q, int page)
+int queue_contains(Queue *q, int page)
 {
     Node *i = q->head;
     while (i != NULL)
@@ -52,7 +52,7 @@ int queue_contains(List *q, int page)
 }
 
 // Marks a node referenced
-void queue_mark(List *q, int page)
+void queue_mark(Queue *q, int page)
 {
     Node *i = q->head;
     while (i != NULL)
@@ -67,7 +67,7 @@ void queue_mark(List *q, int page)
 }
 
 // Removes head if not marked, or unmarks it and moves it to tail
-void queue_second_chance(List *q)
+void queue_second_chance(Queue *q)
 {
     Node *i = q->head;
     if (q->head == NULL)
@@ -86,7 +86,7 @@ void queue_second_chance(List *q)
 }
 
 // Prints all nodes in the queue
-void queue_print(List *q)
+void queue_print(Queue *q)
 {
     Node *i = q->head;
     printf("Head -> ");
@@ -99,7 +99,7 @@ void queue_print(List *q)
 }
 
 // Moves node with page to tail
-void queue_move_to_tail(List *q, int page)
+void queue_move_to_tail(Queue *q, int page)
 {
     Node* i = q->head;
 
@@ -183,23 +183,25 @@ void arr_replace_lowest(ArrayNode* arr, int arr_size, int page)
 void arr_replace_furthest(int arr[], int arr_size, int pages[], int pages_size, int index)
 {
     int furthest_index = index + 1;
+    int candidate = 0;
 
     // Finds candidate for replacement
     for (int i = 0; i < arr_size; i ++)
     {
         int first_index = -1;
-        for (int j = furthest_index; j < pages_size; j ++)
+        for (int j = index + 1; j < pages_size; j ++)
         {
             if (arr[i] == pages[j])
             {
                 first_index = j;
+                break;
             }
         }
 
         // If arr[i] no longer occurs in pages, it is the ideal candidate
         if (first_index == -1)
         {
-            arr[first_index] = pages[index];
+            arr[i] = pages[index];
             return;
         }
         // Set furthest_index to first index of arr[i] if it is the furthest from index
@@ -208,17 +210,18 @@ void arr_replace_furthest(int arr[], int arr_size, int pages[], int pages_size, 
             if (first_index > furthest_index)
             {
                 furthest_index = first_index;
+                candidate = i;
             }
         }
     }
 
-    arr[furthest_index] = pages[index];
+    arr[candidate] = pages[index];
 }
 
 // Increment the counter of all ArrayNodes with mark
 void arr_increment_marked(ArrayNode* arr, int arr_size)
 {
-    for (int i = 1; i < arr_size; i ++)
+    for (int i = 0; i < arr_size; i ++)
     {
         if (arr[i].mark)
         {
@@ -231,15 +234,25 @@ void arr_increment_marked(ArrayNode* arr, int arr_size)
 // Increment and age counters of all ArrayNodes with mark
 void arr_age_marked(ArrayNode* arr, int arr_size, int clock)
 {
-    for (int i = 1; i < arr_size; i ++)
+    for (int i = 0; i < arr_size; i ++)
     {
         if (arr[i].mark)
         {
             arr[i].counter = arr[i].counter >> 1; // bit shift right
-            arr[i].counter |= (1 << clock); // bitwise or assignment
+            arr[i].counter |= (1 << 32); // bitwise or assignment
             arr[i].mark = 0;
         }
     }
+}
+
+// Prints values of all items in array
+void arr_print(int arr[], int arr_size)
+{
+    for (int i = 0; i < arr_size; i ++)
+    {
+        printf("%d, ", arr[i]);
+    }
+    printf("\n");
 }
 
 /* CircularArray functions */
