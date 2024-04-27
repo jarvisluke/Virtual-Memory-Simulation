@@ -327,7 +327,7 @@ void run_simulations(int mem_size, int pages_size, int page_max)
 }
 
 int main() {
-    printf("Page frame size 8\n");
+    printf("\n\nPage frame size 8\n");
     run_simulations(8, 1000, 20);
     printf("Page frame size 10\n");
     run_simulations(10, 1000, 20);
