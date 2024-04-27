@@ -327,6 +327,9 @@ void run_simulations(int mem_size, int pages_size, int page_max)
 }
 
 int main() {
+    run_simulations(8, 1000, 20);
+    run_simulations(10, 1000, 20);
+    run_simulations(12, 1000, 20);
     run_simulations(15, 1000, 20);
 
     return 0;
